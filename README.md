@@ -1,3 +1,7 @@
+Issues:
+
+Install xvfb before ```sudo apt install xvfb```
+
 # run_scaled
 
 Run an X application scaled via xpra.
