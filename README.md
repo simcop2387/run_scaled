@@ -29,3 +29,5 @@ Dependencies:
 * xvfb
 * xpra >= 2 https://xpra.org/
 * xrandr
+
+n.b.  This fork was made to just pull in every outstanding patch to run_scaled from other users, pretty much all of them were good ideas and good fixes, so hopefully this is useful to anyone who finds it.
