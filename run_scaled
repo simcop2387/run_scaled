@@ -1,6 +1,9 @@
 #!/usr/bin/env bash
 
 # Default settings
+
+# When reading xdg menus if not "gnome-" or "kde-" xpra fails!
+export XDG_MENU_PREFIX="gnome-" 
 SCALING_FACTOR=2
 USE_OPENGL="auto"
 SLEEPTIME=1
@@ -70,8 +73,10 @@ UNSCALED_RESOLUTION_Y=$(xrandr | sed -n -e 's/Screen 0:.*current \([0-9]\+\) x \
 
 UNSCALED_RESOLUTION="$( awk "BEGIN {print int($UNSCALED_RESOLUTION_X / $SCALING_FACTOR) \"x\" int($UNSCALED_RESOLUTION_Y / $SCALING_FACTOR)}" /dev/null )"
 
+#--start-new-commands=no causes xpra to not even try to read xdg menus, starting up much faster, and not running into the gnome- bug mentioned above
+
 DISPLAYNUM=:$(shuf -i 10000-99999999 -n 1)
 ESCAPED_PARAMS=$(printf '%q ' "$@")
-xpra start "$DISPLAYNUM" --xvfb="Xvfb +extension Composite -screen 0 ${UNSCALED_RESOLUTION}x24+32 -nolisten tcp -noreset  -auth \$XAUTHORITY" --env=GDK_SCALE=1 --env=GDK_DPI_SCALE=1 --start-child="$ESCAPED_PARAMS" --exit-with-children
+xpra start "$DISPLAYNUM" --xvfb="Xvfb +extension Composite -screen 0 ${UNSCALED_RESOLUTION}x24+32 -nolisten tcp -noreset  -auth \$XAUTHORITY" --env=GDK_SCALE=1 --env=GDK_DPI_SCALE=1 --start-child="$ESCAPED_PARAMS" --exit-with-children --start-new-commands=no
 sleep "$SLEEPTIME"
 XPRA_EXPORT_ICON_DATA=0 xpra attach "$DISPLAYNUM" "--desktop-scaling=$SCALING_FACTOR" "--opengl=$USE_OPENGL" $PERFORMANCE_OPTIONS || xpra stop "$DISPLAYNUM"
